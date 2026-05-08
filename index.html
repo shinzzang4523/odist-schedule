@@ -23,7 +23,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD G
 .tesla-legend { color: #888; font-size: 12px; display: inline-flex; align-items: center; gap: 3px; }
 .tesla-legend-mark { color: #E24B4A; font-weight: 900; }
 .tabs-wrap { margin: 16px 0; }
-.tab-row { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.tab-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.all-cluster { display: inline-flex; padding: 4px; border-radius: 10px; background: #F0EFEC; }
+.all-tab { padding: 7px 14px; border: none; border-radius: 7px; background: #FFFFFF; cursor: pointer; font-size: 13px; font-family: inherit; font-weight: 700; color: #1A1A1A; letter-spacing: 0.5px; transition: opacity 0.15s, background 0.15s; }
+.all-tab.is-on { background: #1A1A1A; color: #FFFFFF; }
 .rank-cluster { display: inline-flex; gap: 3px; padding: 4px; border-radius: 10px; }
 .rank-exec { background: #1A1A1A; }
 .rank-director { background: #D4D4D4; }
@@ -38,9 +41,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD G
 .rank-staff .person-tab { color: #7A5C00; }
 .person-tab.inactive { opacity: 0.18; }
 .person-tab.active-on { background: #FFFFFF !important; color: #1A1A1A !important; box-shadow: 0 2px 6px rgba(0,0,0,0.25); }
-.all-cluster { display: inline-flex; padding: 4px; border-radius: 10px; background: #F0EFEC; }
-.all-tab { padding: 7px 14px; border: none; border-radius: 7px; background: #FFFFFF; cursor: pointer; font-size: 13px; font-family: inherit; font-weight: 700; color: #1A1A1A; letter-spacing: 0.5px; transition: opacity 0.15s, background 0.15s; }
-.all-tab.is-on { background: #1A1A1A; color: #FFFFFF; }
 .controls { display: flex; justify-content: space-between; align-items: center; margin: 14px 0 16px; gap: 12px; flex-wrap: wrap; }
 .range-label { font-size: 17px; font-weight: 600; flex: 1; }
 .controls-right { display: flex; gap: 6px; align-items: center; }
@@ -86,6 +86,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD G
 .error-wrap { padding: 40px 20px; text-align: center; color: #888; }
 .error-wrap button { margin-top: 16px; padding: 10px 20px; background: #1A1A1A; color: #FFF; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; font-family: inherit; }
 .no-active { padding: 40px 20px; text-align: center; color: #aaa; font-size: 14px; }
+.gate-wrap { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }
+.gate-logo { height: 56px; width: auto; margin-bottom: 28px; }
+.gate-title { font-size: 16px; color: #555; margin-bottom: 24px; font-weight: 500; }
+.gate-input { width: 100%; max-width: 280px; padding: 14px 16px; border: 1px solid rgba(0,0,0,0.2); border-radius: 8px; font-size: 16px; font-family: inherit; text-align: center; letter-spacing: 1px; outline: none; transition: border-color 0.15s; }
+.gate-input:focus { border-color: #1A1A1A; }
+.gate-input.error { border-color: #E24B4A; animation: shake 0.4s; }
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.gate-btn { margin-top: 14px; padding: 12px 36px; background: #1A1A1A; color: #FFFFFF; border: none; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.gate-btn:hover { background: #444; }
+.gate-error { margin-top: 12px; font-size: 13px; color: #E24B4A; min-height: 18px; }
 @media (max-width: 600px) {
   body { padding: 8px; }
   .wrap { padding: 14px; border-radius: 8px; }
@@ -101,7 +111,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD G
 </style>
 </head>
 <body>
-<div class="loading-wrap" id="loadingWrap">
+
+<div class="gate-wrap" id="gateWrap" style="display:none;">
+  <img src="https://shinzzang4523.github.io/odist-assets/logo.png" class="gate-logo" alt="ODIST" onerror="this.style.display='none'">
+  <div class="gate-title">사내 전용 — 비밀번호를 입력하세요</div>
+  <input type="password" class="gate-input" id="gateInput" autocomplete="off" placeholder="••••••••">
+  <button class="gate-btn" id="gateBtn">접속</button>
+  <div class="gate-error" id="gateError"></div>
+</div>
+
+<div class="loading-wrap" id="loadingWrap" style="display:none;">
   <img src="https://shinzzang4523.github.io/odist-assets/logo.png" class="loading-logo" alt="ODIST" onerror="this.style.display='none'">
   <div class="loading-text">스케줄 불러오는 중<span class="loading-dots"></span></div>
 </div>
@@ -119,6 +138,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD G
 
 <script>
 const API_URL = 'https://script.google.com/macros/s/AKfycbyC1YcnEOe71OCz__K3-y-B16aKacjUxmnDv2Au8walQIlitqlB4JpNfIqazREciIDj/exec';
+const PASSWORD = 'odist00154*';
+const AUTH_KEY = 'odist_auth_v1';
+const AUTH_VALUE = 'authenticated_2026';
+
 const RANK_OF = { S:'exec',T:'exec', P:'director',L:'director', D:'manager', K:'senior',J:'senior', C:'staff',H:'staff' };
 const RANK_ORDER = { S:1,T:2,P:3,L:4,D:5,K:6,J:7,C:8,H:9 };
 const TYPE_ORDER = { overseas:1, domestic:2, office:3, rest:4 };
@@ -133,6 +156,44 @@ let ACTIVE = new Set();
 let viewMode = 'month';
 let detailDate = null;
 let currentDate = new Date();
+
+function isAuthenticated() {
+  try {
+    return localStorage.getItem(AUTH_KEY) === AUTH_VALUE;
+  } catch (e) {
+    return false;
+  }
+}
+function setAuthenticated() {
+  try {
+    localStorage.setItem(AUTH_KEY, AUTH_VALUE);
+  } catch (e) {}
+}
+function showGate() {
+  document.getElementById('gateWrap').style.display = 'flex';
+  setTimeout(function(){
+    const inp = document.getElementById('gateInput');
+    if (inp) inp.focus();
+  }, 100);
+}
+function hideGate() {
+  document.getElementById('gateWrap').style.display = 'none';
+}
+function tryAuth() {
+  const inp = document.getElementById('gateInput');
+  const errEl = document.getElementById('gateError');
+  if (inp.value === PASSWORD) {
+    setAuthenticated();
+    hideGate();
+    startApp();
+  } else {
+    inp.classList.add('error');
+    errEl.textContent = '비밀번호가 올바르지 않습니다';
+    setTimeout(function(){ inp.classList.remove('error'); }, 500);
+    inp.value = '';
+    inp.focus();
+  }
+}
 
 function escapeHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
@@ -208,7 +269,6 @@ function chipHtml(p, big, hasVehicle) {
 }
 function renderTabsAndControls() {
   const allOn = isAllOn();
-  const soloMode = ACTIVE.size === 1;
   const inData = new Set(SCHEDULE_DATA.persons);
   let html = '<div class="tabs-wrap"><div class="tab-row">';
   html += '<div class="all-cluster"><button class="all-tab' + (allOn ? ' is-on' : '') + '" id="allBtn">ALL</button></div>';
@@ -234,7 +294,7 @@ function renderTabsAndControls() {
 function renderMonth() {
   let html = renderTabsAndControls();
   if (ACTIVE.size === 0) {
-    html += '<div class="no-active">표시할 직원이 없습니다.<br><small style="color:#bbb">탭을 누르거나 "전체"를 클릭하세요.</small></div>';
+    html += '<div class="no-active">표시할 직원이 없습니다.<br><small style="color:#bbb">탭을 누르거나 "ALL"을 클릭하세요.</small></div>';
     document.getElementById('mainArea').innerHTML = html;
     attachHandlers();
     return;
@@ -387,7 +447,22 @@ function loadData(forceRefresh) {
       showError(err.message);
     });
 }
-loadData();
+
+function startApp() {
+  document.getElementById('loadingWrap').style.display = 'flex';
+  loadData();
+}
+
+document.getElementById('gateBtn').addEventListener('click', tryAuth);
+document.getElementById('gateInput').addEventListener('keydown', function(e){
+  if (e.key === 'Enter') tryAuth();
+});
+
+if (isAuthenticated()) {
+  startApp();
+} else {
+  showGate();
+}
 </script>
 </body>
 </html>
