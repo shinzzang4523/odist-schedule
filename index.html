@@ -8,12 +8,12 @@
 <link rel="apple-touch-icon" href="https://shinzzang4523.github.io/odist-assets/icon.png">
 <link rel="apple-touch-icon" sizes="180x180" href="https://shinzzang4523.github.io/odist-assets/icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="ODIST">
 <meta name="theme-color" content="#000000">
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; background: #FAFAF9; color: #1A1A1A; padding: 16px; line-height: 1.5; min-height: 100vh; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; background: #FAFAF9; color: #1A1A1A; padding: 16px; padding-top: calc(16px + env(safe-area-inset-top)); padding-bottom: calc(16px + env(safe-area-inset-bottom)); line-height: 1.5; min-height: 100vh; }
 .wrap { max-width: 720px; margin: 0 auto; background: #FFFFFF; border-radius: 12px; border: 0.5px solid rgba(0,0,0,0.1); padding: 20px; }
 .header { display: flex; align-items: center; gap: 14px; margin-bottom: 8px; }
 .header-logo { height: 36px; width: auto; flex-shrink: 0; }
@@ -86,7 +86,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD G
 .error-wrap { padding: 40px 20px; text-align: center; color: #888; }
 .error-wrap button { margin-top: 16px; padding: 10px 20px; background: #1A1A1A; color: #FFF; border: none; border-radius: 8px; font-size: 14px; cursor: pointer; font-family: inherit; }
 .no-active { padding: 40px 20px; text-align: center; color: #aaa; font-size: 14px; }
-.gate-wrap { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; padding: 20px; }
+.gate-wrap { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #FFFFFF; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10000; padding: calc(20px + env(safe-area-inset-top)) 20px calc(20px + env(safe-area-inset-bottom)); }
 .gate-logo { height: 56px; width: auto; margin-bottom: 28px; }
 .gate-title { font-size: 16px; color: #555; margin-bottom: 24px; font-weight: 500; }
 .gate-input { width: 100%; max-width: 280px; padding: 14px 16px; border: 1px solid rgba(0,0,0,0.2); border-radius: 8px; font-size: 16px; font-family: inherit; text-align: center; letter-spacing: 1px; outline: none; transition: border-color 0.15s; }
@@ -97,7 +97,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD G
 .gate-btn:hover { background: #444; }
 .gate-error { margin-top: 12px; font-size: 13px; color: #E24B4A; min-height: 18px; }
 @media (max-width: 600px) {
-  body { padding: 8px; }
+  body { padding: 8px; padding-top: calc(8px + env(safe-area-inset-top)); padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
   .wrap { padding: 14px; border-radius: 8px; }
   .day-cell { min-height: 78px; padding: 3px; }
   .chip { width: 12px; height: 12px; font-size: 8px; }
