@@ -529,22 +529,25 @@ function attachHandlers() {
   });
   const prevBtn = document.getElementById('prevBtn');
   if (prevBtn) prevBtn.addEventListener('click', function(){
+    const wasAllOn = isAllOn();
     currentDate.setDate(1);
     currentDate.setMonth(currentDate.getMonth() - 1);
-    ACTIVE = new Set(getActivePersonsForView());
+    if (wasAllOn) ACTIVE = new Set(getActivePersonsForView());
     render();
   });
   const nextBtn = document.getElementById('nextBtn');
   if (nextBtn) nextBtn.addEventListener('click', function(){
+    const wasAllOn = isAllOn();
     currentDate.setDate(1);
     currentDate.setMonth(currentDate.getMonth() + 1);
-    ACTIVE = new Set(getActivePersonsForView());
+    if (wasAllOn) ACTIVE = new Set(getActivePersonsForView());
     render();
   });
   const todayBtn = document.getElementById('todayBtn');
   if (todayBtn) todayBtn.addEventListener('click', function(){
+    const wasAllOn = isAllOn();
     currentDate = new Date();
-    ACTIVE = new Set(getActivePersonsForView());
+    if (wasAllOn) ACTIVE = new Set(getActivePersonsForView());
     render();
   });
   const refreshBtn = document.getElementById('refreshBtn');
