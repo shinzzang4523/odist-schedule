@@ -94,7 +94,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD G
 .app-container { height: 100%; padding: 16px; padding-top: calc(16px + env(safe-area-inset-top)); padding-bottom: calc(16px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; box-sizing: border-box; }
 .wrap { width: 100%; max-width: 720px; background: var(--bg-card); border-radius: 12px; border: 0.5px solid var(--border-faint); padding: 0; display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
 .fixed-top { flex-shrink: 0; padding: 20px 20px 0 20px; background: var(--bg-card); border-radius: 12px 12px 0 0; }
-.scroll-area { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 0 20px 20px 20px; -webkit-overflow-scrolling: touch; }
+.scroll-area { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 0 20px 20px 20px; -webkit-overflow-scrolling: touch; scrollbar-width: none; -ms-overflow-style: none; }
+.scroll-area::-webkit-scrollbar { display: none; width: 0; height: 0; }
 .all-tab.all-selected { box-shadow: 0 0 0 2px #E24B4A; }
 .header-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 10px; }
 .header { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
