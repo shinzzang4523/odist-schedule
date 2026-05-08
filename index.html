@@ -89,12 +89,14 @@
   --today-border: #EDEDEB;
 }
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { background: var(--bg-page); }
-body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; background: var(--bg-page); color: var(--text-primary); padding: 16px; padding-top: calc(16px + env(safe-area-inset-top)); padding-bottom: calc(16px + env(safe-area-inset-bottom)); line-height: 1.5; min-height: 100vh; transition: background 0.2s, color 0.2s; overscroll-behavior: none; }
-html { overscroll-behavior: none; }
-.wrap { max-width: 720px; margin: 0 auto; background: var(--bg-card); border-radius: 12px; border: 0.5px solid var(--border-faint); padding: 20px; }
+html, body { height: 100%; overflow: hidden; overscroll-behavior: none; background: var(--bg-page); }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif; color: var(--text-primary); line-height: 1.5; transition: background 0.2s, color 0.2s; padding: 0; margin: 0; }
+.app-container { height: 100%; padding: 16px; padding-top: calc(16px + env(safe-area-inset-top)); padding-bottom: calc(16px + env(safe-area-inset-bottom)); display: flex; flex-direction: column; align-items: center; box-sizing: border-box; }
+.wrap { width: 100%; max-width: 720px; background: var(--bg-card); border-radius: 12px; border: 0.5px solid var(--border-faint); padding: 0; display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: hidden; }
+.fixed-top { flex-shrink: 0; padding: 20px 20px 0 20px; background: var(--bg-card); border-radius: 12px 12px 0 0; }
+.scroll-area { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; padding: 0 20px 20px 20px; -webkit-overflow-scrolling: touch; }
 .all-tab.all-selected { box-shadow: 0 0 0 2px #E24B4A; }
-.header-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; position: sticky; top: 0; z-index: 21; background: var(--bg-card); padding: 20px 0 10px 0; margin: -20px 0 0 0; }
+.header-bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding-bottom: 10px; }
 .header { display: flex; align-items: center; gap: 14px; flex: 1; min-width: 0; }
 .header-logo { height: 36px; width: auto; flex-shrink: 0; }
 .title-block { border-left: 0.5px solid var(--border-mid); padding-left: 14px; min-width: 0; }
@@ -148,9 +150,9 @@ html { overscroll-behavior: none; }
 .entry-text { font-size: 11px; color: var(--text-primary); line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .entry-text.undecided { color: var(--text-undecided); font-style: italic; }
 .more-row { font-size: 10px; color: var(--text-secondary); text-align: center; margin-top: 2px; font-weight: 600; letter-spacing: 0.5px; }
-.sticky-header { position: sticky; top: 66px; z-index: 20; background: var(--bg-card); padding: 8px 0 0 0; margin-top: 0; box-shadow: 0 6px 12px -8px rgba(0,0,0,0.25); }
+.sticky-header { background: var(--bg-card); padding-bottom: 4px; box-shadow: 0 6px 12px -8px rgba(0,0,0,0.25); }
 .detail-view { padding: 4px 2px; }
-.detail-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; padding: 8px 0 12px 0; border-bottom: 0.5px solid var(--border-faint); position: sticky; top: 66px; z-index: 20; background: var(--bg-card); box-shadow: 0 6px 12px -8px rgba(0,0,0,0.25); }
+.detail-header { display: flex; align-items: center; gap: 14px; margin-bottom: 0; padding: 8px 0 12px 0; border-bottom: 0.5px solid var(--border-faint); background: var(--bg-card); box-shadow: 0 6px 12px -8px rgba(0,0,0,0.25); }
 .back-btn { display: inline-flex; align-items: center; justify-content: center; background: var(--bg-button); color: var(--bg-button-text); padding: 9px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; user-select: none; border: none; }
 .back-btn:hover { opacity: 0.85; }
 .detail-title { font-size: 17px; font-weight: 600; color: var(--text-primary); }
@@ -204,9 +206,10 @@ html { overscroll-behavior: none; }
 .gate-btn:hover { opacity: 0.85; }
 .gate-error { margin-top: 12px; font-size: 13px; color: var(--vehicle-mark); min-height: 18px; }
 @media (max-width: 600px) {
-  body { padding: 8px; padding-top: calc(8px + env(safe-area-inset-top)); padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
-  .wrap { padding: 14px; border-radius: 8px; }
-  .header-bar { margin-top: -14px; padding-top: 14px; }
+  .app-container { padding: 8px; padding-top: calc(8px + env(safe-area-inset-top)); padding-bottom: calc(8px + env(safe-area-inset-bottom)); }
+  .wrap { border-radius: 8px; }
+  .fixed-top { padding: 14px 14px 0 14px; }
+  .scroll-area { padding: 0 14px 14px 14px; }
   .day-cell { min-height: 78px; padding: 3px; }
   .chip { width: 12px; height: 12px; font-size: 8px; }
   .chip.has-vehicle::after { font-size: 9px; top: -6px; }
@@ -233,18 +236,25 @@ html { overscroll-behavior: none; }
   <div class="loading-text">스케줄 불러오는 중<span class="loading-dots"></span></div>
 </div>
 
+<div class="app-container">
 <div class="wrap" id="appWrap" style="display:none;">
-  <div class="header-bar">
-    <div class="header">
-      <img src="https://shinzzang4523.github.io/odist-assets/logo.png" alt="ODIST" class="header-logo" onerror="this.style.display='none'">
-      <div class="title-block">
-        <div class="title">스케줄</div>
-        <div class="subtitle">개인별 동선 <span class="tesla-legend"><span class="tesla-legend-mark">✓</span>테슬라</span></div>
+  <div class="fixed-top">
+    <div class="header-bar">
+      <div class="header">
+        <img src="https://shinzzang4523.github.io/odist-assets/logo.png" alt="ODIST" class="header-logo" onerror="this.style.display='none'">
+        <div class="title-block">
+          <div class="title">스케줄</div>
+          <div class="subtitle">개인별 동선 <span class="tesla-legend"><span class="tesla-legend-mark">✓</span>테슬라</span></div>
+        </div>
       </div>
+      <button class="theme-toggle" id="themeToggle" title="모드 변경" aria-label="모드 변경">☀</button>
     </div>
-    <button class="theme-toggle" id="themeToggle" title="모드 변경" aria-label="모드 변경">☀</button>
+    <div id="fixedHeaderArea"></div>
   </div>
-  <div id="mainArea"></div>
+  <div class="scroll-area">
+    <div id="mainArea"></div>
+  </div>
+</div>
 </div>
 
 <script>
@@ -286,12 +296,28 @@ function applyTheme(theme) {
   try { localStorage.setItem(THEME_KEY, theme); } catch (e) {}
 }
 function loadTheme() {
-  let theme = 'dark';
+  let theme = null;
   try {
     const saved = localStorage.getItem(THEME_KEY);
     if (saved === 'dark' || saved === 'light') theme = saved;
   } catch (e) {}
+  if (!theme) {
+    theme = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+  }
   applyTheme(theme);
+  if (window.matchMedia) {
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const listener = function(e) {
+      let saved = null;
+      try { saved = localStorage.getItem(THEME_KEY); } catch (err) {}
+      if (saved !== 'dark' && saved !== 'light') {
+        applyTheme(e.matches ? 'dark' : 'light');
+        if (SCHEDULE_DATA) render();
+      }
+    };
+    if (mq.addEventListener) mq.addEventListener('change', listener);
+    else if (mq.addListener) mq.addListener(listener);
+  }
 }
 function toggleTheme() {
   applyTheme(currentTheme === 'dark' ? 'light' : 'dark');
@@ -474,11 +500,11 @@ function renderTabsAndControls() {
   return html;
 }
 function renderMonth() {
-  let html = '<div class="sticky-header">' + renderTabsAndControls();
+  let topHtml = '<div class="sticky-header">' + renderTabsAndControls();
   if (ACTIVE.size === 0) {
-    html += '</div>';
-    html += '<div class="no-active">표시할 직원이 없습니다.<br><small>탭을 누르거나 "ALL"을 클릭하세요.</small></div>';
-    document.getElementById('mainArea').innerHTML = html;
+    topHtml += '</div>';
+    document.getElementById('fixedHeaderArea').innerHTML = topHtml;
+    document.getElementById('mainArea').innerHTML = '<div class="no-active">표시할 직원이 없습니다.<br><small>탭을 누르거나 "ALL"을 클릭하세요.</small></div>';
     attachHandlers();
     return;
   }
@@ -489,12 +515,13 @@ function renderMonth() {
   const lastDay = new Date(year, month+1, 0);
   const daysInMonth = lastDay.getDate();
   const emptyBefore = firstDay === 0 ? 6 : firstDay - 1;
-  html += '<div class="dow-row">' +
+  topHtml += '<div class="dow-row">' +
     '<div class="dow">월</div><div class="dow">화</div><div class="dow">수</div>' +
     '<div class="dow">목</div><div class="dow">금</div>' +
     '<div class="dow weekend">토</div><div class="dow weekend">일</div>' +
-    '</div></div><div class="month-grid">';
-  for (let i = 0; i < emptyBefore; i++) html += '<div class="day-cell empty"></div>';
+    '</div></div>';
+  let bodyHtml = '<div class="month-grid">';
+  for (let i = 0; i < emptyBefore; i++) bodyHtml += '<div class="day-cell empty"></div>';
   for (let day = 1; day <= daysInMonth; day++) {
     const d = new Date(year, month, day);
     const dow = d.getDay();
@@ -515,13 +542,14 @@ function renderMonth() {
         '</div>';
     }).join('');
     const moreHtml = hidden > 0 ? '<div class="more-row">··· +' + hidden + '</div>' : '';
-    html += '<div class="day-cell' + (isToday ? ' today' : '') + '" data-date="' + key + '">' +
+    bodyHtml += '<div class="day-cell' + (isToday ? ' today' : '') + '" data-date="' + key + '">' +
       '<div class="day-num' + (isWeekend ? ' weekend' : '') + '">' + day + '</div>' +
       pillsHtml + moreHtml +
       '</div>';
   }
-  html += '</div>';
-  document.getElementById('mainArea').innerHTML = html;
+  bodyHtml += '</div>';
+  document.getElementById('fixedHeaderArea').innerHTML = topHtml;
+  document.getElementById('mainArea').innerHTML = bodyHtml;
   attachHandlers();
   document.querySelectorAll('.day-cell[data-date]').forEach(function(c){
     c.addEventListener('click', function(){
@@ -533,17 +561,17 @@ function renderMonth() {
   });
 }
 function renderWeek() {
-  let html = '<div class="sticky-header">' + renderTabsAndControls() + '</div>';
+  const topHtml = '<div class="sticky-header">' + renderTabsAndControls() + '</div>';
+  document.getElementById('fixedHeaderArea').innerHTML = topHtml;
   if (ACTIVE.size === 0) {
-    html += '<div class="no-active">표시할 직원이 없습니다.<br><small>탭을 누르거나 "ALL"을 클릭하세요.</small></div>';
-    document.getElementById('mainArea').innerHTML = html;
+    document.getElementById('mainArea').innerHTML = '<div class="no-active">표시할 직원이 없습니다.<br><small>탭을 누르거나 "ALL"을 클릭하세요.</small></div>';
     attachHandlers();
     return;
   }
   const today = new Date();
   const weekStart = getWeekStart(currentDate);
   const colors = getChipColors();
-  html += '<div class="week-list">';
+  let bodyHtml = '<div class="week-list">';
   for (let i = 0; i < 7; i++) {
     const d = new Date(weekStart);
     d.setDate(weekStart.getDate() + i);
@@ -552,13 +580,13 @@ function renderWeek() {
     const isToday = isSameDay(d, today);
     const key = (d.getMonth()+1) + '/' + d.getDate();
     const entries = getEntriesForDate(key, ACTIVE);
-    html += '<div class="week-day' + (isToday ? ' today' : '') + '" data-date="' + key + '">';
-    html += '<div class="week-day-header">';
-    html += '<span class="week-day-num' + (isWeekend ? ' weekend' : '') + '">' + (d.getMonth()+1) + '/' + d.getDate() + '</span>';
-    html += '<span class="week-day-dow' + (isWeekend ? ' weekend' : '') + '">(' + DOW_NAMES[dow] + ')</span>';
-    html += '</div>';
+    bodyHtml += '<div class="week-day' + (isToday ? ' today' : '') + '" data-date="' + key + '">';
+    bodyHtml += '<div class="week-day-header">';
+    bodyHtml += '<span class="week-day-num' + (isWeekend ? ' weekend' : '') + '">' + (d.getMonth()+1) + '/' + d.getDate() + '</span>';
+    bodyHtml += '<span class="week-day-dow' + (isWeekend ? ' weekend' : '') + '">(' + DOW_NAMES[dow] + ')</span>';
+    bodyHtml += '</div>';
     if (entries.length === 0) {
-      html += '<div class="week-day-empty">일정 없음</div>';
+      bodyHtml += '<div class="week-day-empty">일정 없음</div>';
     } else {
       entries.forEach(function(e){
         const chips = e.persons.map(function(p){
@@ -566,16 +594,16 @@ function renderWeek() {
           return '<span class="week-entry-chip' + vCls + '" style="background:' + colors[RANK_OF[p]] + '">' + p + '</span>';
         }).join('');
         const undecCls = e.isUndecided ? ' undecided' : '';
-        html += '<div class="week-entry">';
-        html += '<div class="week-entry-chips">' + chips + '</div>';
-        html += '<div class="week-entry-text' + undecCls + '">' + escapeHtml(e.text) + '</div>';
-        html += '</div>';
+        bodyHtml += '<div class="week-entry">';
+        bodyHtml += '<div class="week-entry-chips">' + chips + '</div>';
+        bodyHtml += '<div class="week-entry-text' + undecCls + '">' + escapeHtml(e.text) + '</div>';
+        bodyHtml += '</div>';
       });
     }
-    html += '</div>';
+    bodyHtml += '</div>';
   }
-  html += '</div>';
-  document.getElementById('mainArea').innerHTML = html;
+  bodyHtml += '</div>';
+  document.getElementById('mainArea').innerHTML = bodyHtml;
   attachHandlers();
   document.querySelectorAll('.week-day[data-date]').forEach(function(c){
     c.addEventListener('click', function(){
@@ -588,28 +616,28 @@ function renderWeek() {
 }
 function renderDetail() {
   const entries = getEntriesForDate(detailDate, new Set(SCHEDULE_DATA.persons));
-  let html = '<div class="detail-view">';
-  html += '<div class="detail-header">';
-  html += '<div id="backBtn" class="back-btn" role="button" tabindex="0">← 뒤로</div>';
-  html += '<div class="detail-title">' + dateLabel(detailDate) + '</div>';
-  html += '<div class="detail-nav">';
-  html += '<button class="detail-nav-btn" id="detailPrevBtn">‹</button>';
-  html += '<button class="detail-nav-btn" id="detailNextBtn">›</button>';
-  html += '</div>';
-  html += '</div>';
-  html += '<div class="detail-list">';
+  let topHtml = '<div class="detail-header">';
+  topHtml += '<div id="backBtn" class="back-btn" role="button" tabindex="0">← 뒤로</div>';
+  topHtml += '<div class="detail-title">' + dateLabel(detailDate) + '</div>';
+  topHtml += '<div class="detail-nav">';
+  topHtml += '<button class="detail-nav-btn" id="detailPrevBtn">‹</button>';
+  topHtml += '<button class="detail-nav-btn" id="detailNextBtn">›</button>';
+  topHtml += '</div>';
+  topHtml += '</div>';
+  let bodyHtml = '<div class="detail-list" style="padding-top:16px;">';
   entries.forEach(function(e){
     const chips = e.persons.map(function(p){
       return chipHtml(p, true, e.vehiclePersons && e.vehiclePersons.has(p));
     }).join('');
     const undecCls = e.isUndecided ? ' undecided' : '';
-    html += '<div class="detail-row">' +
+    bodyHtml += '<div class="detail-row">' +
       '<div class="detail-chips">' + chips + '</div>' +
       '<div class="detail-text' + undecCls + '">' + escapeHtml(e.text) + '</div>' +
       '</div>';
   });
-  html += '</div></div>';
-  document.getElementById('mainArea').innerHTML = html;
+  bodyHtml += '</div>';
+  document.getElementById('fixedHeaderArea').innerHTML = topHtml;
+  document.getElementById('mainArea').innerHTML = bodyHtml;
   document.getElementById('backBtn').addEventListener('click', function(){
     viewMode = prevViewMode || 'month';
     render();
