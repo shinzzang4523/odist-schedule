@@ -753,7 +753,7 @@ function loadData(forceRefresh) {
       SCHEDULE_DATA.data = processData(SCHEDULE_DATA.data);
       ACTIVE = new Set(getActivePersonsForView());
       render();
-      document.getElementById('appWrap').style.display = 'block';
+      document.getElementById('appWrap').style.display = 'flex';
       document.getElementById('loadingWrap').classList.add('hide');
       setTimeout(function() {
         document.getElementById('loadingWrap').style.display = 'none';
