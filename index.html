@@ -361,6 +361,7 @@ function isAllOn() {
 function getEntriesForDate(date, personSet) {
   const entries = [];
   personSet.forEach(function(p){
+    if (!RANK_OF[p]) return;
     if (!isPersonActiveOnDate(p, date)) return;
     const items = (SCHEDULE_DATA.data[p] && SCHEDULE_DATA.data[p][date]) || [];
     if (items.length === 0) {
@@ -575,6 +576,7 @@ function loadData(forceRefresh) {
     })
     .then(function(data) {
       SCHEDULE_DATA = data;
+      SCHEDULE_DATA.persons = SCHEDULE_DATA.persons.filter(function(p){ return RANK_OF[p]; });
       SCHEDULE_DATA.data = processData(SCHEDULE_DATA.data);
       ACTIVE = new Set(getActivePersonsForView());
       render();
