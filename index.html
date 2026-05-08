@@ -147,8 +147,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Pretendard', 'Apple SD G
 .entry-text { font-size: 11px; color: var(--text-primary); line-height: 1.25; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .entry-text.undecided { color: var(--text-undecided); font-style: italic; }
 .more-row { font-size: 10px; color: var(--text-secondary); text-align: center; margin-top: 2px; font-weight: 600; letter-spacing: 0.5px; }
+.sticky-header { position: sticky; top: 0; z-index: 20; background: var(--bg-card); padding-top: 8px; margin-top: -8px; }
 .detail-view { padding: 4px 2px; }
-.detail-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 0.5px solid var(--border-faint); }
+.detail-header { display: flex; align-items: center; gap: 14px; margin-bottom: 16px; padding: 8px 0 12px 0; border-bottom: 0.5px solid var(--border-faint); position: sticky; top: 0; z-index: 20; background: var(--bg-card); }
 .back-btn { display: inline-flex; align-items: center; justify-content: center; background: var(--bg-button); color: var(--bg-button-text); padding: 9px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; user-select: none; border: none; }
 .back-btn:hover { opacity: 0.85; }
 .detail-title { font-size: 17px; font-weight: 600; color: var(--text-primary); }
@@ -471,8 +472,9 @@ function renderTabsAndControls() {
   return html;
 }
 function renderMonth() {
-  let html = renderTabsAndControls();
+  let html = '<div class="sticky-header">' + renderTabsAndControls();
   if (ACTIVE.size === 0) {
+    html += '</div>';
     html += '<div class="no-active">표시할 직원이 없습니다.<br><small>탭을 누르거나 "ALL"을 클릭하세요.</small></div>';
     document.getElementById('mainArea').innerHTML = html;
     attachHandlers();
@@ -489,7 +491,7 @@ function renderMonth() {
     '<div class="dow">월</div><div class="dow">화</div><div class="dow">수</div>' +
     '<div class="dow">목</div><div class="dow">금</div>' +
     '<div class="dow weekend">토</div><div class="dow weekend">일</div>' +
-    '</div><div class="month-grid">';
+    '</div></div><div class="month-grid">';
   for (let i = 0; i < emptyBefore; i++) html += '<div class="day-cell empty"></div>';
   for (let day = 1; day <= daysInMonth; day++) {
     const d = new Date(year, month, day);
@@ -529,7 +531,7 @@ function renderMonth() {
   });
 }
 function renderWeek() {
-  let html = renderTabsAndControls();
+  let html = '<div class="sticky-header">' + renderTabsAndControls() + '</div>';
   if (ACTIVE.size === 0) {
     html += '<div class="no-active">표시할 직원이 없습니다.<br><small>탭을 누르거나 "ALL"을 클릭하세요.</small></div>';
     document.getElementById('mainArea').innerHTML = html;
